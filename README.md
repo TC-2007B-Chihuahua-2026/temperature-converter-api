@@ -71,6 +71,16 @@ Current response example for a request converting 0°C to Fahrenheit:
 
 This route builds a temperature value object from the request body, validates the incoming request before reaching the controller, reads the target unit from the URL parameter, and delegates the actual conversion to the service layer.
 
+## API documentation
+
+Swagger UI is available at:
+
+```http
+http://localhost:3000/api-docs
+```
+
+The documentation is generated with `swagger-jsdoc` and served with `swagger-ui-express`.
+
 ## Path design rationale
 
 The endpoint is structured as `/v1/temperatures/convert/:unitToConvert` for a few clear reasons:
