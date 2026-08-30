@@ -3,8 +3,9 @@
  */
 const TemperatureVO = require('../valueobjects/temperature.vo');
 const {
-  convertTemperature: convertTemperatureService,
+    convertTemperature: convertTemperatureService,
 } = require('../services/temperature.service');
+const { validationResult } = require('express-validator');
 
 /**
  * Handles temperature conversion requests.
@@ -13,15 +14,21 @@ const {
  * @returns {import('express').Response} The converted TemperatureVO response.
  */
 const convertTemperature = (req, res) => {
-  const { value, unit } = req.body;
-  const unitToConvert = req.params.unitToConvert;
+    let result = validationResult(req);
 
-  const temperature = new TemperatureVO(value, unit);
-  const convertedTemperature = convertTemperatureService(temperature, unitToConvert);
+    if (!result.isEmpty()) {
+        return res.status(400).json({ errors: result.array() });
+    } else {
+        const { value, unit } = req.body;
+        const unitToConvert = req.params.unitToConvert;
 
-  return res.status(200).json(convertedTemperature);
+        const temperature = new TemperatureVO(value, unit);
+        const convertedTemperature = convertTemperatureService(temperature, unitToConvert);
+
+        return res.status(200).json(convertedTemperature);
+    }
 };
 
 module.exports = {
-  convertTemperature,
+    convertTemperature,
 };
