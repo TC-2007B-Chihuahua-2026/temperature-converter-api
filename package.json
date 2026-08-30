@@ -7,6 +7,10 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "jest"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }

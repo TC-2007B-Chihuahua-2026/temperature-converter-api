@@ -20,8 +20,16 @@ Before running the project, make sure you have installed:
 
 ## Installation
 
+This project uses Express.js.
+
 ```bash
-npm install
+npm install express
+```
+
+## Run the application
+
+```bash
+npm start
 ```
 
 ## Run tests
