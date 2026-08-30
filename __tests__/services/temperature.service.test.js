@@ -17,14 +17,14 @@ describe('Temperature service', () => {
 
   test('GIVEN a Fahrenheit temperature WHEN converted to Celsius THEN it returns the converted value in Celsius', () => {
     // GIVEN
-    const fahrenheitTemperature = new TemperatureVO(73.4, 'FAHRENHEIT');
+    const fahrenheitTemperature = new TemperatureVO(86, 'FAHRENHEIT');
 
     // WHEN
     const celsiusTemperature = convertTemperature(fahrenheitTemperature, 'CELSIUS');
 
     // THEN
     expect(celsiusTemperature).toBeInstanceOf(TemperatureVO);
-    expect(celsiusTemperature.value).toBe(23);
+    expect(celsiusTemperature.value).toBe(30);
     expect(celsiusTemperature.unit).toBe('CELSIUS');
   });
 });

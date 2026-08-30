@@ -13,9 +13,12 @@ const convertTemperature = (temperature, unit) => {
   if (temperature.unit === 'CELSIUS' && unit === 'FAHRENHEIT') {
     const convertedValue = (temperature.value * 9) / 5 + 32;
     return new TemperatureVO(convertedValue, unit);
+  } else if (temperature.unit === 'FAHRENHEIT' && unit === 'CELSIUS') {
+    const convertedValue = ((temperature.value - 32) * 5) / 9;
+    return new TemperatureVO(convertedValue, unit);
+  } else {
+    return temperature;
   }
-
-  return temperature;
 };
 
 module.exports = {
