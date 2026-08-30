@@ -71,20 +71,37 @@ Current response example:
 
 This route currently echoes the incoming temperature value object while exposing the target unit through the URL parameter.
 
+## Path design rationale
+
+The endpoint is structured as `/v1/temperatures/convert/:unitToConvert` for a few clear reasons:
+
+- `/v1` defines the API version and keeps future versions isolated from current clients.
+- `/temperatures` indicates the resource being handled.
+- `/convert` describes the action being performed, which keeps the route expressive and easy to read.
+- `:unitToConvert` captures the destination unit as part of the URL, making the conversion target explicit and easy to inspect without mixing it into the request body.
+
+This path keeps the route semantic and predictable while preserving a clean separation of responsibilities: the route declares the endpoint and delegates business logic to the controller.
+
 ## Request flow
 
 ```mermaid
 sequenceDiagram
     participant Client
-    participant API as Temperature API
-    participant Route as Route Handler
-    participant VO as TemperatureVO
+    participant API as Temperature API <<app.js>>
+    participant Route as Route <<temperature.routes.js>>
+    participant Controller as Controller <<temperature.controller.js>>
+    participant VO as ValueObject <<temperature.vo.js>>
 
     Client->>API: POST /v1/temperatures/convert/FAHRENHEIT
-    API->>Route: Forward request
-    Route->>VO: Create TemperatureVO(value, unit)
-    VO-->>Route: Return object
-    Route-->>Client: JSON response
+    API->>Route: app.use('/', temperatureRoutes)
+    Route->>Route: router.post('/v1/temperatures/convert/:unitToConvert', convertTemperature)
+    Route->>Controller: convertTemperature(req, res)
+    Controller->>Controller: Read req.params.unitToConvert and req.body
+    Controller->>VO: new TemperatureVO(value, unit)
+    VO-->>Controller: Return object
+    Controller-->>Route: return res.status(200).json(temperature)
+    Route-->>API: return response
+    API-->>Client: JSON response
 ```
 
 ## Example conversions
