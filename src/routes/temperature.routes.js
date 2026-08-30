@@ -2,7 +2,7 @@
  * Temperature route definitions.
  */
 const express = require('express');
-const TemperatureVO = require('../../valueobjects/temperature.vo');
+const { convertTemperature } = require('../controllers/temperature.controller');
 
 const router = express.Router();
 
@@ -13,15 +13,6 @@ const router = express.Router();
  * @param {import('express').Response} res - Express response object.
  * @returns {import('express').Response} The TemperatureVO response.
  */
-router.post('/v1/temperatures/convert/:unitToConvert', (req, res) => {
-  const { value, unit } = req.body;
-  const unitToConvert = req.params.unitToConvert;
-
-  console.log('unitToConvert:', unitToConvert);
-
-  const temperature = new TemperatureVO(value, unit);
-
-  return res.status(200).json(temperature);
-});
+router.post('/v1/temperatures/convert/:unitToConvert', convertTemperature);
 
 module.exports = router;
