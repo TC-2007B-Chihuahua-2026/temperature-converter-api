@@ -1,7 +1,7 @@
 /**
  * Temperature request controller.
  */
-const TemperatureVO = require('../../valueobjects/temperature.vo');
+const TemperatureVO = require('../valueobjects/temperature.vo');
 
 /**
  * Handles temperature conversion requests.

@@ -1,5 +1,5 @@
-const TemperatureVO = require('../valueobjects/temperature.vo');
-const { convertTemperature } = require('../src/services/temperature.service');
+const TemperatureVO = require('../../src/valueobjects/temperature.vo');
+const { convertTemperature } = require('../../src/services/temperature.service');
 
 describe('Temperature service', () => {
   test('GIVEN a Celsius temperature WHEN converted to Fahrenheit THEN it returns the converted value in Fahrenheit', () => {
