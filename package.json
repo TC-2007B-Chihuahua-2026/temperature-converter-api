@@ -1,0 +1,12 @@
+{
+  "name": "temperature-converte-api",
+  "version": "1.0.0",
+  "description": "API to convert temperature from Celsius to Fahrerheit and Fahrerheit to Celsius",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  }
+}
