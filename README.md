@@ -6,7 +6,7 @@ This project is built with Express.js, a fast and minimalist web framework for N
 
 ## Description
 
-This project is intended to provide a simple temperature conversion API. The current implementation includes the project structure, route registration, and a value object model used by the API layer.
+This project is intended to provide a simple temperature conversion API. The current implementation includes the project structure, route registration, controller/service delegation, and a value object model used by the API layer.
 
 ## Prerequisites
 
@@ -60,16 +60,16 @@ Request body example:
 }
 ```
 
-Current response example:
+Current response example for a request converting 0°C to Fahrenheit:
 
 ```json
 {
-  "value": 0,
-  "unit": "CELSIUS"
+  "value": 32,
+  "unit": "FAHRENHEIT"
 }
 ```
 
-This route currently echoes the incoming temperature value object while exposing the target unit through the URL parameter.
+This route builds a temperature value object from the request body, reads the target unit from the URL parameter, and delegates the actual conversion to the service layer.
 
 ## Path design rationale
 
@@ -90,16 +90,23 @@ sequenceDiagram
     participant API as Temperature API <<app.js>>
     participant Route as Route <<temperature.routes.js>>
     participant Controller as Controller <<temperature.controller.js>>
-    participant VO as ValueObject <<temperature.vo.js>>
+    participant Service as Service <<temperature.service.js>>
+    participant originalTemperature as originalTemperature:ValueObject <<temperature.vo.js>>
+    participant convertedTemperature as convertedTemperature:ValueObject <<temperature.vo.js>>
 
     Client->>API: POST /v1/temperatures/convert/FAHRENHEIT
     API->>Route: app.use('/', temperatureRoutes)
     Route->>Route: router.post('/v1/temperatures/convert/:unitToConvert', convertTemperature)
     Route->>Controller: convertTemperature(req, res)
     Controller->>Controller: Read req.params.unitToConvert and req.body
-    Controller->>VO: new TemperatureVO(value, unit)
-    VO-->>Controller: Return object
-    Controller-->>Route: return res.status(200).json(temperature)
+    Controller->>originalTemperature: new TemperatureVO(value, unit)
+    originalTemperature-->>Controller: Return originalTemperature
+    Controller->>Service: convertTemperature(originalTemperature, unitToConvert)
+    Service->>Service: Convert value
+    Service->>convertedTemperature: new TemperatureVO(convertedValue, unitToConvert)
+    convertedTemperature-->>Service: Return convertedTemperature
+    Service-->>Controller: Return convertedTemperature
+    Controller-->>Route: return res.status(200).json(convertedTemperature)
     Route-->>API: return response
     API-->>Client: JSON response
 ```
@@ -118,13 +125,17 @@ sequenceDiagram
 ├── app.js
 ├── src/
 │   ├── routes/
+│   │   └── temperature.routes.js
 │   ├── controllers/
+│   │   └── temperature.controller.js
 │   ├── services/
-│   ├── utils/
+│   │   └── temperature.service.js
+│   ├── valueobjects/
+│   │   └── temperature.vo.js
 │   └── ...
-├── valueobjects/
-│   └── temperature.vo.js
-├── tests/
+├── __tests__/
+│   └── services/
+│       └── temperature.service.test.js
 ├── package.json
 ├── README.md
 ├── .gitignore
@@ -135,6 +146,12 @@ sequenceDiagram
 
 ```bash
 npm test
+```
+
+## Run coverage
+
+```bash
+npm run coverage
 ```
 
 ## Notes
