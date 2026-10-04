@@ -10,6 +10,10 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/', temperatureRoutes);
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Temperature Converter app listening on http://0.0.0.0:${port}`);
-});
+if (require.main === module) {
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Temperature Converter app listening on http://0.0.0.0:${port}`);
+  });
+}
+
+module.exports = app;
