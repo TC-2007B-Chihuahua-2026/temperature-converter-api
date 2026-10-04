@@ -161,7 +161,12 @@ If any validation fails, the route returns HTTP 400 and prevents the controller 
 │   ├── valueobjects/
 │   │   └── temperature.vo.js
 │   └── ...
+├── tests/
+│   └── performance/
+│       └── temperature-load.js
 ├── __tests__/
+│   ├── integration/
+│   │   └── temperature.api.test.js
 │   └── services/
 │       └── temperature.service.test.js
 ├── package.json
@@ -175,6 +180,45 @@ If any validation fails, the route returns HTTP 400 and prevents the controller 
 ```bash
 npm test
 ```
+
+## k6 load tests
+
+The project includes a minimal k6 load test under `tests/performance/temperature-load.js`.
+
+### Install k6
+
+On macOS with Homebrew:
+
+```bash
+brew install k6
+```
+
+You can also consult the official k6 documentation here:
+
+- https://grafana.com/docs/k6/latest/
+- https://k6.io/docs/
+
+### Run the k6 script
+
+Make sure the API is running first:
+
+```bash
+npm start
+```
+
+Then run the performance test:
+
+```bash
+k6 run tests/performance/temperature-load.js
+```
+
+### Export results to CSV
+
+```bash
+k6 run --out csv=results.csv tests/performance/temperature-load.js
+```
+
+This generates a CSV file that can be opened in Excel or other tools for analysis.
 
 ## Run coverage
 
