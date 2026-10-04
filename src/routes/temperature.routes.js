@@ -8,11 +8,53 @@ const { check, param } = require('express-validator');
 const router = express.Router();
 
 /**
- * Converts the submitted temperature request into a TemperatureVO response.
- * @route POST /v1/temperatures/convert/:unitToConvert
- * @param {import('express').Request} req - Express request object.
- * @param {import('express').Response} res - Express response object.
- * @returns {import('express').Response} The TemperatureVO response.
+ * @openapi
+ * /v1/temperatures/convert/{unitToConvert}:
+ *   post:
+ *     summary: Convert a temperature value to the requested unit
+ *     tags: [Temperature]
+ *     parameters:
+ *       - in: path
+ *         name: unitToConvert
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [CELSIUS, FAHRENHEIT]
+ *         description: Unit to convert the temperature into.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - value
+ *               - unit
+ *             properties:
+ *               value:
+ *                 type: number
+ *                 example: 23
+ *               unit:
+ *                 type: string
+ *                 enum: [CELSIUS, FAHRENHEIT]
+ *                 example: CELSIUS
+ *     responses:
+ *       200:
+ *         description: Temperature converted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 value:
+ *                   type: number
+ *                   example: 73.4
+ *                 unit:
+ *                   type: string
+ *                   enum: [CELSIUS, FAHRENHEIT]
+ *                   example: FAHRENHEIT
+ *       400:
+ *         description: Invalid request payload or unit.
  */
 router.post('/v1/temperatures/convert/:unitToConvert', [
         check("value").notEmpty().withMessage("value is mandatory"),
