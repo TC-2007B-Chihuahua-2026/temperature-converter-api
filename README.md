@@ -162,6 +162,8 @@ If any validation fails, the route returns HTTP 400 and prevents the controller 
 │   │   └── temperature.vo.js
 │   └── ...
 ├── __tests__/
+│   ├── integration/
+│   │   └── temperature.api.test.js
 │   └── services/
 │       └── temperature.service.test.js
 ├── package.json
@@ -176,11 +178,31 @@ If any validation fails, the route returns HTTP 400 and prevents the controller 
 npm test
 ```
 
+The project includes two layers of tests:
+
+- unit tests for the service logic
+- API integration tests with Supertest for the real HTTP flow
+
+To run only the integration tests:
+
+```bash
+npm test -- --runInBand __tests__/integration/temperature.api.test.js
+```
+
 ## Run coverage
 
 ```bash
 npm run coverage
 ```
+
+## Testing approach
+
+The API is validated at two levels:
+
+- service tests confirm the conversion logic behaves correctly
+- integration tests confirm the endpoint responds correctly with real HTTP requests and validation errors
+
+This gives confidence in both the business logic and the external contract of the API.
 
 ## Notes
 
